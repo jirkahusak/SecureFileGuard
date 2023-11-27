@@ -25,7 +25,7 @@ def main():
         wanted_file = args.input
         for i in all_files:
             if i == wanted_file:
-                file = all_files[i]
+                file = i
     
     if not args.password:
         print("You need to enter a password. Please try again.")
@@ -51,6 +51,8 @@ def main():
 
     if function == "encrypt":
 
+        separator = b'|||'
+
         result = hashing(password, secure)
 
 
@@ -62,7 +64,7 @@ def main():
         else:
             if result is not None:
                 key, hashed_pass, salt = result
-                metadata = hashed_pass + salt
+                metadata = hashed_pass + separator + salt
             
 
         if isinstance(file, list):
@@ -74,12 +76,12 @@ def main():
                     print(read_data)
 
                     if hashed_pass and salt is not None:
-                        data_to_write = encrypted + metadata + nonce
+                        data_to_write = encrypted + separator + nonce + separator + metadata
                     else:
-                        data_to_write = encrypted + nonce
+                        data_to_write = encrypted + separator + nonce
 
                     print(data_to_write)
-                    #write_binary(i, data_to_write)
+                    write_binary(i, data_to_write)
 
                 except Exception as e:
                     print(f"An error occurred: {str(e)}")
@@ -91,13 +93,17 @@ def main():
             try: 
                 read_data = read_binary(file)
                 encrypted, nonce = encryption(key, read_data)
-                metadata = hashed_pass + salt
+
+                print(key)
+                print(read_data)
 
                 if hashed_pass and salt is None:
-                    data_to_write = encrypted + metadata
+                    data_to_write = encrypted + separator + nonce + separator + metadata
                 else:
-                    data_to_write = encrypted
-                    
+                    data_to_write = encrypted + separator + nonce
+
+                print(data_to_write)
+                print(len(data_to_write))                   
                 write_binary(file, data_to_write)
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
@@ -107,18 +113,19 @@ def main():
     else:
 
         key = hashing(password, True)
+        separator = b'|||'
+        
 
         if isinstance(file, list):
             for i in file:
                 read_data = read_binary(i)
-                data = read_data[:23]
-                print(len(read_data))
+                sections = read_data.split(separator)
+                data = sections[0]
+                metadata_nonce = sections[1]
 
-                if(len(read_data) == 112):
-                    metadata_password = read_data[23:83]
-                    metadata_salt = read_data[83:112]
-                    metadata_nonce = read_data[112:]
-
+                if(len(sections) > 2):
+                    metadata_password = sections[2]
+                    metadata_salt = sections[3]
 
                     password_to_check = bcrypt.hashpw(password.encode('utf-8'), metadata_salt)
 
@@ -126,18 +133,18 @@ def main():
                         print("Your password doesn't match your encryption password.")
                         sys.exit(1)
 
-                metadata_nonce = read_data[23:]
                 decrypted = decryption(key, data, metadata_nonce)
                 write_binary(i, decrypted)
                 print(f"Decrypted {i}")
         else:
             read_data = read_binary(file)
-            data = read_data[:23]
+            sections = read_data.split(separator)
+            data = sections[0]
+            metadata_nonce = sections[1]
 
-            if(len(read_data) > 112):
-                metadata_password = read_data[23:83]
-                metadata_salt = read_data[83:112]
-                metadata_nonce = read_data[112:]
+            if(len(sections) > 2):
+                metadata_password = sections[2]
+                metadata_salt = sections[3]
 
                 password_to_check = bcrypt.hashpw(password.encode('utf-8'), metadata_salt)
 
@@ -145,10 +152,9 @@ def main():
                     print("Your password doesn't match your encryption password.")
                     sys.exit(1)
                 
-                metadata_nonce = read_data[23:]
-                decrypted = decryption(key, data, metadata_nonce)
-                write_binary(file, decrypted)
-                print(f"Decrypted {file}")
+            decrypted = decryption(key, data, metadata_nonce)
+            write_binary(file, decrypted)
+            print(f"Decrypted {file}")
 
 
 def read_binary(file_name):
