@@ -24,8 +24,17 @@ python secure_file_guard.py --decrypt -input <file_name> -password <your_passwor
 - input: Specify the file name or “all” to decrypt all files.
 - password: Enter the password used for encryption.
 
-How It Works
-The tool uses ChaCha20 encryption to secure the data and bcrypt for password hashing, providing a robust encryption method to safeguard your files.
+## How It Works
+
+### Encryption
+The encryption function in Secure File Guard leverages the ChaCha20 encryption algorithm. It accepts the data to be encrypted along with a key generated from the user-provided password. If the `-secure` flag is included, it generates a secure key using bcrypt, enhancing the encryption's strength.
+
+### Decryption
+Decryption utilizes ChaCha20 as well. It takes the encrypted data, along with the key derived from the password, to decrypt the content. If the `-secure` flag was used during encryption, it uses bcrypt to authenticate the password before decryption.
+
+### -secure Flag
+The `-secure` flag augments security by generating a secure key with bcrypt. When used during encryption, it hashes the password, creating a more robust key for ChaCha20 encryption. During decryption, it verifies the password before proceeding with decryption, providing an added layer of security.
+
 
 Requirements
 - Python 3.x
@@ -36,7 +45,7 @@ Notes
 - Ensure you have the required permissions to access and modify the specified files.
 - Always keep your password secure and do not share it with unauthorized users.
 
-###Contributors
+### Contributors
 Jirka Husak
 
 ### License
