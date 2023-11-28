@@ -37,7 +37,7 @@ Notes
 - Always keep your password secure and do not share it with unauthorized users.
 
 ###Contributors
-[Jirka Husak]
+Jirka Husak
 
 ### License
 
