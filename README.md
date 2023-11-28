@@ -36,9 +36,10 @@ Notes
 - Ensure you have the required permissions to access and modify the specified files.
 - Always keep your password secure and do not share it with unauthorized users.
 
-Contributors
-[Your Name/Username]
+###Contributors
+[Jirka Husak]
 
-License
-[License information]
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
