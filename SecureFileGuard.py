@@ -72,15 +72,12 @@ def main():
                 try:
                     read_data = read_binary(i)
                     encrypted, nonce = encryption(key, read_data)
-                    print(key)
-                    print(read_data)
 
                     if hashed_pass and salt is not None:
                         data_to_write = encrypted + separator + nonce + separator + metadata
                     else:
                         data_to_write = encrypted + separator + nonce
 
-                    print(data_to_write)
                     write_binary(i, data_to_write)
 
                 except Exception as e:
@@ -94,16 +91,11 @@ def main():
                 read_data = read_binary(file)
                 encrypted, nonce = encryption(key, read_data)
 
-                print(key)
-                print(read_data)
-
                 if hashed_pass and salt is None:
                     data_to_write = encrypted + separator + nonce + separator + metadata
                 else:
                     data_to_write = encrypted + separator + nonce
-
-                print(data_to_write)
-                print(len(data_to_write))                   
+                   
                 write_binary(file, data_to_write)
             except Exception as e:
                 print(f"An error occurred: {str(e)}")
