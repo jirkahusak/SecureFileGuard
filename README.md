@@ -13,14 +13,14 @@ The Secure File Guard is a Python-based encryption and decryption tool that enha
 To encrypt a file or files:
 
 ```bash
-python secure_file_guard.py --encrypt -input <file_name> -password <your_password> [-secure]
+python SecureFileGuard.py --encrypt -input <file_name> -password <your_password> [-secure]
 ```
 
 ### Decryption
 To decrypt a file or files:
 
 ```bash
-python secure_file_guard.py --decrypt -input <file_name> -password <your_password>
+python SecureFileGuard.py --decrypt -input <file_name> -password <your_password>
 ```
 - input: Specify the file name or “all” to decrypt all files.
 - password: Enter the password used for encryption.
